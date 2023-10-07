@@ -1,2 +1,2 @@
 # pictorpret
-Translate pictures while browsing the web.
+Translate text in pictures while browsing the web.
