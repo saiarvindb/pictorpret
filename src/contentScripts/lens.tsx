@@ -1,9 +1,11 @@
 import { toPng } from "html-to-image";
 import { FC, useState } from "react";
 import Tesseract from "tesseract.js";
+import { runtime } from "webextension-polyfill";
 
 export const Lens : FC = () =>
 {
+	const [showLens, setShowLens] = useState<boolean>(true);
 	const [top, setTop] = useState<number>(0);
 	const [left, setLeft] = useState<number>(0);
 	const [width, setWidth] = useState<number>(200);
@@ -19,6 +21,7 @@ export const Lens : FC = () =>
 			width : `${width}px`,
 			height : `${height}px`,
 			backgroundColor : "hsla(0,0%,50%,0.5)",
+			zIndex: 2147483647,
 		},
 	};
 
@@ -48,6 +51,7 @@ export const Lens : FC = () =>
 
 	const captureImage = () =>
 	{
+		setShowLens(false);
 		toPng(document.body)
 			.then
 			(
@@ -73,12 +77,22 @@ export const Lens : FC = () =>
 						croppedImg.src = cropImage(img, top*hf, left*wf, width*wf, height*hf);
 						croppedImg.onload = () =>
 						{
-							Tesseract.recognize(croppedImg)
+							Tesseract.recognize(croppedImg, "eng")
 								.then
 								(
 									(result) =>
 									{
-										console.log(result.data.text);
+										runtime.onMessage.addListener
+										(
+											(request) =>
+											{
+												if (request.message === "Textbox")
+												{
+													runtime.sendMessage({type : "Teseract Text", message : result.data.text});
+												}
+											}
+										)
+										
 									}
 								)
 								.catch
@@ -105,5 +119,5 @@ export const Lens : FC = () =>
 	<div style={styles.div} onMouseDown={handleMouseDown}>
 		<button onClick={captureImage}>Capture</button>
 	</div>
-	return lens;
+	return showLens && lens;
 };

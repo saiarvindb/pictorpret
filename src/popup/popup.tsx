@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { FC } from "react";
-import {tabs} from  "webextension-polyfill"
+import {tabs} from  "webextension-polyfill";
+import { Textbox } from "./textbox";
 
 const root : HTMLDivElement = document.createElement("div");
 root.id = "pictorpret";
@@ -33,11 +34,12 @@ const Popup : FC = () =>
 	const popup = 
 	<div>
 		<button onClick={getText}>
-			GetText
-		</button>
+			Capture Image
+		</button>{'\n'}
 		<button onClick={clear}>
 			Clear
-		</button>
+		</button>{'\n'}
+		<Textbox/>
 	</div>
 	return popup;
 };
