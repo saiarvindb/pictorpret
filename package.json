@@ -27,6 +27,9 @@
 		"html-to-image" : "1.11.11",
 		"tesseract.js" : "5.0.2",
 		"webextension-polyfill" : "0.10.0",
-		"@types/webextension-polyfill" : "0.10.4"
+		"@types/webextension-polyfill" : "0.10.4",
+		"@mui/material": "5.14.13",
+		"@emotion/react": "11.11.1",
+		"@emotion/styled": "11.11.0"
 	}
 }

@@ -2,16 +2,24 @@
 	"manifest_version" : 3,
 	"name" : "pictorpret",
 	"version" : "1.0",
-	"action" :
+	"permissions" :
+	[
+		"storage",
+		"activeTab"
+	],
+	"background" :
 	{
-		"default_popup" : "popup.html"
+		"service_worker" : "background.js"
 	},
 	"content_scripts" :
 	[
 		{
 			"matches" : ["<all_urls>"],
-			"js" : ["contentScript.js"]
+			"js" : ["content.js"]
 		}
 	],
-	"permissions" : ["activeTab"]
+	"action" :
+	{
+		"default_popup" : "popup.html"
+	}
 }

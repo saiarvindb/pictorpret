@@ -1,9 +1,11 @@
 import { toPng } from "html-to-image";
 import { FC, useState } from "react";
 import Tesseract from "tesseract.js";
+import { runtime } from "webextension-polyfill";
 
 export const Lens : FC = () =>
 {
+	const [showLens, setShowLens] = useState<boolean>(true);
 	const [top, setTop] = useState<number>(0);
 	const [left, setLeft] = useState<number>(0);
 	const [width, setWidth] = useState<number>(200);
@@ -19,6 +21,7 @@ export const Lens : FC = () =>
 			width : `${width}px`,
 			height : `${height}px`,
 			backgroundColor : "hsla(0,0%,50%,0.5)",
+			zIndex: 2147483647,
 		},
 	};
 
@@ -48,12 +51,13 @@ export const Lens : FC = () =>
 
 	const captureImage = () =>
 	{
+		setShowLens(false);
 		toPng(document.body)
 			.then
 			(
 				(dataUrl) =>
 				{
-					const cropImage = (image, t, l, w, h) =>
+					const cropImageURL = (image, t, l, w, h) =>
 					{
 						const canvas = document.createElement('canvas');
 						canvas.width = w;
@@ -65,20 +69,22 @@ export const Lens : FC = () =>
 					
 					var img = new Image();
 					img.src = dataUrl;
-					var croppedImg = new Image();
 					img.onload = () =>
 					{
 						let hf = img.naturalHeight/document.body.clientHeight;
 						let wf = img.naturalWidth/document.body.clientWidth;
-						croppedImg.src = cropImage(img, top*hf, left*wf, width*wf, height*hf);
-						croppedImg.onload = () =>
-						{
-							Tesseract.recognize(croppedImg)
+						let croppedImageSrc = cropImageURL(img, top*hf, left*wf, width*wf, height*hf);
+						runtime.sendMessage({text : "Get Language"})
+						.then
+						(
+							(response) =>
+							{
+								Tesseract.recognize(croppedImageSrc, response["language"])
 								.then
 								(
 									(result) =>
 									{
-										console.log(result.data.text);
+										runtime.sendMessage({text : "Send Text", data : result["data"]["text"]});
 									}
 								)
 								.catch
@@ -88,7 +94,8 @@ export const Lens : FC = () =>
 										console.log(error);
 									}
 								)
-						}
+							}
+						)
 					}
 				}
 			)
@@ -105,5 +112,5 @@ export const Lens : FC = () =>
 	<div style={styles.div} onMouseDown={handleMouseDown}>
 		<button onClick={captureImage}>Capture</button>
 	</div>
-	return lens;
+	return showLens && lens;
 };
