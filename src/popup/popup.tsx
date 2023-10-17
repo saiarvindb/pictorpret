@@ -1,47 +1,82 @@
 import { createRoot } from "react-dom/client";
-import { FC } from "react";
-import {tabs} from  "webextension-polyfill";
-import { Textbox } from "./textbox";
+import { FC, useState } from "react";
+import { runtime } from  "webextension-polyfill";
+import { Autocomplete, Button, TextField } from "@mui/material";
 
-const root : HTMLDivElement = document.createElement("div");
-root.id = "pictorpret";
-document.body.appendChild(root);
-
-const Popup : FC = () =>
+const main = () =>
 {
-	const getText = () =>
+	const root : HTMLDivElement = document.createElement("div");
+	root.style.width = "256px";
+	root.style.height = "256px";
+	root.id = "pictorpret"; 
+	document.body.appendChild(root);
+
+	const Popup : FC<any> = (props) =>
 	{
-		tabs.query({ active: true, currentWindow: true })
+		const [text, setText] = useState<string>("");
+		const options = ["eng", "hin", "jpn"];
+		const handleLanguageChange = (event : React.SyntheticEvent<Element, Event>, value : any) =>
+		{
+			runtime.sendMessage({text : "Set Language", language : value});
+		}
+		const captureText = () =>
+		{
+			runtime.sendMessage({text : "Capture Text"});
+		}
+		const clear = () =>
+		{
+			runtime.sendMessage({text : "Clear"});
+		}
+		const getText = () =>
+		{
+			runtime.sendMessage({text : "Get Text"})
 			.then
 			(
-				(activeTabs) =>
+				(response) =>
 				{
-					tabs.sendMessage(activeTabs[0].id, {message : "Get Text"});
+					setText(response);
 				}
-			);
-	};
-	const clear = () =>
-	{
-		tabs.query({ active: true, currentWindow: true })
-			.then
-			(
-				(activeTabs) =>
+			)
+		}
+		const popup = 
+		<div>
+			<Autocomplete 
+				options={options}
+				defaultValue={props.languageID}
+				onChange={handleLanguageChange}
+				renderInput=
 				{
-					tabs.sendMessage(activeTabs[0].id, {message : "Clear"});
+					(params) =>
+					{
+						return <TextField {...params} label="Language"/>;
+					}
 				}
-			);
-	};
-	const popup = 
-	<div>
-		<button onClick={getText}>
-			Capture Image
-		</button>{'\n'}
-		<button onClick={clear}>
-			Clear
-		</button>{'\n'}
-		<Textbox/>
-	</div>
-	return popup;
+			/>
+			<Button onClick={captureText}>Capture Text</Button>
+			<Button onClick={clear}>Clear</Button>
+			<Button onClick={getText}>Get Text</Button>
+			<TextField
+				multiline
+				rows={4}
+				variant="outlined"
+				InputProps={{readOnly: true}}
+				label="Text"
+				value={text}
+			/>
+		</div>;
+		return popup;
+	}
+
+	runtime.sendMessage({text : "Get Language"})
+		.then
+		(
+			(response) =>
+			{
+				createRoot(root).render(<Popup languageID={response["language"]}/>);
+			}
+		)
+	
+	
 };
 
-createRoot(root).render(<Popup/>);
+main();

@@ -57,7 +57,7 @@ export const Lens : FC = () =>
 			(
 				(dataUrl) =>
 				{
-					const cropImage = (image, t, l, w, h) =>
+					const cropImageURL = (image, t, l, w, h) =>
 					{
 						const canvas = document.createElement('canvas');
 						canvas.width = w;
@@ -69,30 +69,22 @@ export const Lens : FC = () =>
 					
 					var img = new Image();
 					img.src = dataUrl;
-					var croppedImg = new Image();
 					img.onload = () =>
 					{
 						let hf = img.naturalHeight/document.body.clientHeight;
 						let wf = img.naturalWidth/document.body.clientWidth;
-						croppedImg.src = cropImage(img, top*hf, left*wf, width*wf, height*hf);
-						croppedImg.onload = () =>
-						{
-							Tesseract.recognize(croppedImg, "eng")
+						let croppedImageSrc = cropImageURL(img, top*hf, left*wf, width*wf, height*hf);
+						runtime.sendMessage({text : "Get Language"})
+						.then
+						(
+							(response) =>
+							{
+								Tesseract.recognize(croppedImageSrc, response["language"])
 								.then
 								(
 									(result) =>
 									{
-										runtime.onMessage.addListener
-										(
-											(request) =>
-											{
-												if (request.message === "Textbox")
-												{
-													runtime.sendMessage({type : "Teseract Text", message : result.data.text});
-												}
-											}
-										)
-										
+										runtime.sendMessage({text : "Send Text", data : result["data"]["text"]});
 									}
 								)
 								.catch
@@ -102,7 +94,8 @@ export const Lens : FC = () =>
 										console.log(error);
 									}
 								)
-						}
+							}
+						)
 					}
 				}
 			)

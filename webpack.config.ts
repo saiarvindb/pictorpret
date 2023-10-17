@@ -8,7 +8,8 @@ const configuration : Configuration =
 	entry : 
 	{
 		popup : `${__dirname}/src/popup/popup.tsx`,
-		contentScript : `${__dirname}/src/contentScripts/contentScript.tsx`,
+		content : `${__dirname}/src/content/content.tsx`,
+		background : `${__dirname}/src/background/background.ts`
 	},
 	output :
 	{
