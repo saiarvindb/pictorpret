@@ -9,7 +9,7 @@ const configuration : Configuration =
 	{
 		popup : `${__dirname}/src/popup/popup.tsx`,
 		content : `${__dirname}/src/content/content.tsx`,
-		background : `${__dirname}/src/background/background.ts`
+		serviceWorker : `${__dirname}/src/background/serviceWorker.ts`
 	},
 	output :
 	{
