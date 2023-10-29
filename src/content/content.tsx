@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { createRoot } from "react-dom/client";
-import { Lens } from "./lens";
 import { Runtime, runtime }  from "webextension-polyfill";
+import { CroppingTool } from "./croppingTool";
 
 const main : () => void = () =>
 {
@@ -15,7 +15,7 @@ const main : () => void = () =>
 	
 	const Ext : FC = () =>
 	{
-		const ext = <Lens/>
+		const ext = <CroppingTool/>
 		return ext;
 	}
 	

@@ -2,8 +2,9 @@ import { Runtime, runtime, storage, tabs } from "webextension-polyfill";
 
 const main : () => void = () =>
 {
-	let language = "eng";
-	let text = "";
+	let language : string = "eng";
+	let tesseractText : string = "";
+	
 	const handleMessage : (message: any, sender: Runtime.MessageSender, sendResponse: (response? : any) => void) => true | void | Promise<any>  = (message : any, sender : Runtime.MessageSender, sendResponse : (response? : any) => void) =>
 	{
 		if (message["text"] === "Get Language")
@@ -13,7 +14,7 @@ const main : () => void = () =>
 				(
 					(result) =>
 					{
-						sendResponse({language : result["language"]})
+						sendResponse(result["language"]);
 					}
 				)
 			return true;
@@ -22,6 +23,18 @@ const main : () => void = () =>
 		{
 			language = message["language"];
 			storage.local.set({language : language});
+		}
+		else if (message["text"] === "Capture Visible Tab")
+		{
+			tabs.captureVisibleTab()
+			.then
+			(
+				(url) =>
+				{
+					sendResponse(url);
+				}
+			)
+			return true;
 		}
 		else if (message["text"] === "Capture Text" || message["text"] === "Clear")
 		{
@@ -34,13 +47,13 @@ const main : () => void = () =>
 					}
 				);
 		}
-		else if (message["text"] === "Send Text")
+		else if (message["text"] === "Tesseract Text")
 		{
-			text = message["data"];
+			tesseractText = message["value"];
 		}
 		else if (message["text"] === "Get Text")
 		{
-			sendResponse(text);
+			sendResponse(tesseractText);
 		}
 	}
 

@@ -13,8 +13,8 @@ const main = () =>
 
 	const Popup : FC<any> = (props) =>
 	{
-		const [text, setText] = useState<string>("");
-		const options = ["eng", "hin", "jpn"];
+		const [text, setText] = useState<string>("text");
+		const options = ["ara", "ben", "eng", "fra", "hin", "jpn", "tam", "tel"];
 		const handleLanguageChange = (event : React.SyntheticEvent<Element, Event>, value : any) =>
 		{
 			runtime.sendMessage({text : "Set Language", language : value});
@@ -38,6 +38,18 @@ const main = () =>
 				}
 			)
 		}
+		const captureTab = () =>
+		{
+			runtime.sendMessage({text : "Capture Visible Tab"})
+			.then
+			(
+				(response) =>
+				{
+					let img = new Image();
+					img.src = response;
+				}
+			)
+		}
 		const popup = 
 		<div>
 			<Autocomplete 
@@ -55,6 +67,7 @@ const main = () =>
 			<Button onClick={captureText}>Capture Text</Button>
 			<Button onClick={clear}>Clear</Button>
 			<Button onClick={getText}>Get Text</Button>
+			<Button onClick={captureTab}>Capture Tab</Button>
 			<TextField
 				multiline
 				rows={4}
@@ -72,7 +85,7 @@ const main = () =>
 		(
 			(response) =>
 			{
-				createRoot(root).render(<Popup languageID={response["language"]}/>);
+				createRoot(root).render(<Popup languageID={response}/>);
 			}
 		)
 	
