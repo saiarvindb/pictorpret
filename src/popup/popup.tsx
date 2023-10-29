@@ -13,7 +13,7 @@ const main = () =>
 
 	const Popup : FC<any> = (props) =>
 	{
-		const [text, setText] = useState<string>("text");
+		const [text, setText] = useState<string>("");
 		const options = ["ara", "ben", "eng", "fra", "hin", "jpn", "tam", "tel"];
 		const handleLanguageChange = (event : React.SyntheticEvent<Element, Event>, value : any) =>
 		{

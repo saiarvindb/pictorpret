@@ -24,7 +24,6 @@
 		"react-dom" : "18.2.0",
 		"@types/react-dom" : "18.2.10",
 		"ts-loader" : "9.4.4",
-		"html-to-image" : "1.11.11",
 		"tesseract.js" : "5.0.2",
 		"webextension-polyfill" : "0.10.0",
 		"@types/webextension-polyfill" : "0.10.4",

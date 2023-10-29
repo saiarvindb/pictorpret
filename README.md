@@ -1,6 +1,6 @@
 # pictorpret
 
-(NOTE: This is still a WIP)
+(NOTE: This is still a WIP.)
 
 Translate text in pictures while browsing the web.
 
@@ -12,4 +12,4 @@ Translate text in pictures while browsing the web.
 	- npm i
 	- npm run build
 
-The extension build can be found at `dist/ext/`
+The extension build can be found at `dist/ext/`.
