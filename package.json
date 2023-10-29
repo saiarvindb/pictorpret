@@ -29,6 +29,7 @@
 		"@types/webextension-polyfill" : "0.10.4",
 		"@mui/material": "5.14.13",
 		"@emotion/react": "11.11.1",
-		"@emotion/styled": "11.11.0"
+		"@emotion/styled": "11.11.0",
+		"axios": "1.6.0"
 	}
 }
