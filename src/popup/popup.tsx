@@ -3,24 +3,24 @@ import { FC, useState } from "react";
 import { runtime } from  "webextension-polyfill";
 import { Autocomplete, Button, TextField } from "@mui/material";
 import { translateText } from "./translate";
+import { tesseractLanguages } from "./language";
 
 const main = () =>
 {
 	const root : HTMLDivElement = document.createElement("div");
 	root.style.width = "256px";
-	root.style.height = "256px";
+	root.style.height = "512px";
 	root.style.overflow = "auto";
-	root.id = "pictorpret"; 
+	root.id = "pictorpret";
 	document.body.appendChild(root);
 
 	const Popup : FC<any> = (props) =>
 	{
 		const [text, setText] = useState<string>("");
 		const [translation, setTranslation] = useState<string>("");
-		const options = ["ara", "ben", "eng", "fra", "hin", "jpn", "tam", "tel"];
 		const handleLanguageChange = (event : React.SyntheticEvent<Element, Event>, value : any) =>
 		{
-			runtime.sendMessage({text : "Set Language", language : value});
+			runtime.sendMessage({text : "Set Language", language : tesseractLanguages[value]});
 		}
 		const captureText = () =>
 		{
@@ -69,8 +69,8 @@ const main = () =>
 		<div>
 			<br/>
 			<Autocomplete 
-				options={options}
-				defaultValue={props.languageID}
+				options={Object.keys(tesseractLanguages)}
+				defaultValue={props["language"]}
 				onChange={handleLanguageChange}
 				renderInput=
 				{
@@ -100,7 +100,7 @@ const main = () =>
 				rows={4}
 				variant="outlined"
 				InputProps={{readOnly: true}}
-				label="Text"
+				label="Translation"
 				value={translation}
 			/>
 			<br/>
@@ -113,7 +113,8 @@ const main = () =>
 	(
 		(response) =>
 		{
-			createRoot(root).render(<Popup languageID={response}/>);
+			let language = Object.keys(tesseractLanguages).find((key) => tesseractLanguages[key] === response);
+			createRoot(root).render(<Popup language={language}/>);
 		}
 	)
 	
