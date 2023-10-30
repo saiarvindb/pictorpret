@@ -48,8 +48,12 @@ const configuration : Configuration =
 				patterns :
 				[
 					{
-						from : `${__dirname}/src/manifest.json`,
-						to : `${__dirname}/dist/`,
+						from : `${__dirname}/src/firefox.manifest.json`,
+						to : `${__dirname}/dist/firefox.manifest.json`,
+					},
+					{
+						from : `${__dirname}/src/chrome.manifest.json`,
+						to : `${__dirname}/dist/chrome.manifest.json`,
 					},
 				],
 			},
