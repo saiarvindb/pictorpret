@@ -6,8 +6,11 @@
 	"scripts" :
 	{
 		"dev" : "rm -rf dist/ && webpack -w",
-		"start" : "web-ext run -s dist/",
-		"build" : "rm -rf dist/ && webpack && web-ext build -s dist/ -a dist/ext/",
+		"chrome" : "cat dist/chrome.manifest.json > dist/manifest.json && web-ext run -s dist/ -t chromium",
+		"firefox" : "cat dist/firefox.manifest.json > dist/manifest.json && web-ext run -s dist/",
+		"build_chrome" : "cat dist/chrome.manifest.json > dist/manifest.json && web-ext build -s dist/ -a dist/chrome/",
+		"build_firefox" : "cat dist/firefox.manifest.json > dist/manifest.json && web-ext build -s dist/ -a dist/firefox/",
+		"build" : "rm -rf dist/ && webpack && npm run build_chrome && npm run build_firefox",
 		"clean" : "rm -rf dist/ node_modules/"
 	},
 	"dependencies" :

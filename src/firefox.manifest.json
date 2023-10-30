@@ -1,0 +1,25 @@
+{
+	"manifest_version" : 3,
+	"name" : "pictorpret",
+	"version" : "1.0",
+	"permissions" :
+	[
+		"storage",
+		"<all_urls>"
+	],
+	"background" :
+	{
+		"scripts" : ["serviceWorker.js"]
+	},
+	"content_scripts" :
+	[
+		{
+			"matches" : ["<all_urls>"],
+			"js" : ["content.js"]
+		}
+	],
+	"action" :
+	{
+		"default_popup" : "popup.html"
+	}
+}

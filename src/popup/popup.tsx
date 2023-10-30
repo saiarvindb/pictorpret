@@ -109,14 +109,13 @@ const main = () =>
 	}
 
 	runtime.sendMessage({text : "Get Language"})
-		.then
-		(
-			(response) =>
-			{
-				createRoot(root).render(<Popup languageID={response}/>);
-			}
-		)
-	
+	.then
+	(
+		(response) =>
+		{
+			createRoot(root).render(<Popup languageID={response}/>);
+		}
+	)
 	
 };
 
