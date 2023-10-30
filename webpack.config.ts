@@ -4,7 +4,8 @@ import CopyWebpackPlugin from "copy-webpack-plugin";
 
 const configuration : Configuration =
 {
-	mode : "production",
+	mode : "development",
+	devtool: "source-map",
 	entry : 
 	{
 		popup : `${__dirname}/src/popup/popup.tsx`,
