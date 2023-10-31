@@ -2,7 +2,7 @@ import { Runtime, runtime, storage, tabs } from "webextension-polyfill";
 
 const main : () => void = () =>
 {
-	let language : string = "eng";
+	let language : string = "";
 	let tesseractText : string = "";
 	
 	const handleMessage : (message: any, sender: Runtime.MessageSender, sendResponse: (response? : any) => void) => true | void | Promise<any>  = (message : any, sender : Runtime.MessageSender, sendResponse : (response? : any) => void) =>
@@ -10,13 +10,13 @@ const main : () => void = () =>
 		if (message["text"] === "Get Language")
 		{
 			storage.local.get("language")
-				.then
-				(
-					(result) =>
-					{
-						sendResponse(result["language"]);
-					}
-				)
+			.then
+			(
+				(result) =>
+				{
+					sendResponse(result["language"]);
+				}
+			)
 			return true;
 		}
 		else if (message["text"] === "Set Language")
@@ -39,13 +39,13 @@ const main : () => void = () =>
 		else if (message["text"] === "Capture Text" || message["text"] === "Clear")
 		{
 			tabs.query({ active: true, currentWindow: true })
-				.then
-				(
-					(activeTabs) =>
-					{
-						tabs.sendMessage(activeTabs[0].id, {text : message["text"]});
-					}
-				);
+			.then
+			(
+				(activeTabs) =>
+				{
+					tabs.sendMessage(activeTabs[0].id, {text : message["text"]});
+				}
+			);
 		}
 		else if (message["text"] === "Tesseract Text")
 		{
@@ -55,16 +55,31 @@ const main : () => void = () =>
 		{
 			sendResponse(tesseractText);
 		}
-	}
+	};
 
-	storage.local.set({language : language})
-		.then
-		(
-			() =>
+	storage.local.get("language")
+	.then
+	(
+		(result) =>
+		{
+			if (result["language"] === undefined)
 			{
-				runtime.onMessage.addListener(handleMessage);
+				language = "eng";
 			}
-		)
+			else
+			{
+				language = result["language"];
+			}
+			storage.local.set({language : language})
+			.then
+			(
+				() =>
+				{
+					runtime.onMessage.addListener(handleMessage);
+				}
+			)
+		}
+	);
 	return;
 };
 
