@@ -1,6 +1,6 @@
 # pictorpret
 
-(NOTE: This is still a WIP.)
+(NOTE: This is still a WIP and therefore has limitations.)
 
 Translate text in pictures while browsing the web.
 
@@ -12,5 +12,10 @@ Translate text in pictures while browsing the web.
 	- npm i
 	- npm run build
 
-The extension build for chrome can be found at `dist/chrome/`.
-The extension build for firefox can be found at `dist/firefox/`.
+The extension for chromium browsers can be found in `dist/chrome/`.  
+The extension for firefox can be found in `dist/firefox/`.
+
+### Limitations
+
+- Does not work on some webpages with strict content security policies.
+- It can perform OCR but cannot form sentences for vertical scripts.
