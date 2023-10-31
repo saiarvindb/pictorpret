@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { FC, useState } from "react";
 import { runtime } from  "webextension-polyfill";
-import { Autocomplete, Button, TextField } from "@mui/material";
+import { Autocomplete, Button, TextField, Typography } from "@mui/material";
 import { translateText } from "./translate";
 import { tesseractLanguages } from "./language";
 
@@ -29,6 +29,8 @@ const main = () =>
 		const clear = () =>
 		{
 			runtime.sendMessage({text : "Clear"});
+			setText("");
+			setTranslation("");
 		}
 		const getText = () =>
 		{
@@ -38,18 +40,6 @@ const main = () =>
 				(response) =>
 				{
 					setText(response);
-				}
-			)
-		}
-		const captureTab = () =>
-		{
-			runtime.sendMessage({text : "Capture Visible Tab"})
-			.then
-			(
-				(response) =>
-				{
-					let img = new Image();
-					img.src = response;
 				}
 			)
 		}
@@ -65,8 +55,24 @@ const main = () =>
 			)
 		};
 
+		const styles : any =
+		{
+			Button :
+			{
+				backgroundColor : "hsla(216, 100%, 50%, 1)",
+				color : "white",
+				margin : "4px",
+			},
+			TextField :
+			{
+				width : "100%",
+				boxSizing : "content-box"
+			}
+		}
+
 		const popup = 
 		<div>
+			<Typography color="hsla(137, 60%, 30%, 1)" variant="h4" align="center">Pictorpret</Typography>
 			<br/>
 			<Autocomplete 
 				options={Object.keys(tesseractLanguages)}
@@ -80,23 +86,24 @@ const main = () =>
 					}
 				}
 			/>
-			<Button onClick={captureText}>Capture Text</Button>
-			<Button onClick={clear}>Clear</Button>
-			<Button onClick={getText}>Get Text</Button>
-			<Button onClick={captureTab}>Capture Tab</Button>
-			
+			<Button style={styles.Button} onClick={captureText}>Capture Text</Button>
+			<Button style={styles.Button} onClick={clear}>Clear</Button>
+			<Button style={styles.Button} onClick={getText}>Get Text</Button>
 			<TextField
 				multiline
+				style={styles.TextField}
 				rows={4}
 				variant="outlined"
 				InputProps={{readOnly: true}}
 				label="Text"
 				value={text}
 			/>
-
-			<Button onClick={translate}>Translate to English</Button>
+			<br/>
+			<Button style={styles.Button} onClick={translate}>Translate to English</Button>
+			<br/>
 			<TextField
 				multiline
+				style={styles.TextField}
 				rows={4}
 				variant="outlined"
 				InputProps={{readOnly: true}}
